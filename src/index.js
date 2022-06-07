@@ -1,6 +1,7 @@
 const { IncomingWebhook, IncomingWebhookResult } = require(`@slack/webhook`);
 const { failedAttachment, passedAttachment } = require(`./util`);
 const fs = require('fs');
+
 const { WebClient, LogLevel } = require("@slack/web-api");
 
 
@@ -78,8 +79,9 @@ class SlackService {
                 // LogLevel can be imported and used to make debugging simpler
                 logLevel: LogLevel.DEBUG
             });
+            const name = fs.readdirSync(this.options.pathFile);
             // The name of the file you're going to upload
-            const fileName = this.options.pathFile;
+            const fileName = this.options.pathFile + name[0];
             // ID of channel that you want to upload file to
             const channelId = this.options.channelId;
             try {
@@ -91,7 +93,7 @@ class SlackService {
                 // Include your filename in a ReadStream here
                 file: fs.createReadStream(fileName)
             });
-                console.log(result);
+                // console.log(result);
             }
             catch (error) {
                 console.error(error);
