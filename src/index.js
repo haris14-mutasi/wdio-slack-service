@@ -1,6 +1,7 @@
 const { IncomingWebhook, IncomingWebhookResult } = require(`@slack/webhook`);
 const { failedAttachment, passedAttachment } = require(`./util`);
 const fs = require('fs');
+const AdmZip = require("adm-zip");
 
 const { WebClient, LogLevel } = require("@slack/web-api");
 
@@ -73,6 +74,12 @@ class SlackService {
 
     async afterSession(){
         if(this.options.uploadFile === true){
+            const zip = new AdmZip();
+            const outputFile = "./allure-results/test.zip";
+            zip.addLocalFolder("./allure-results");
+            zip.writeZip(outputFile);
+            console.log(`Created ${outputFile} successfully`);
+
             // WebClient instantiates a client that can call API methods
             // When using Bolt, you can use either `app.client` or the `client` passed to listeners.
             const client = new WebClient(this.options.botToken, {
@@ -81,7 +88,8 @@ class SlackService {
             });
             const name = fs.readdirSync(this.options.pathFile);
             // The name of the file you're going to upload
-            const fileName = this.options.pathFile + name[0];
+            // const fileName = this.options.pathFile + name[0];
+            const fileName = './allure-results/test.zip';
             // ID of channel that you want to upload file to
             const channelId = this.options.channelId;
             try {
