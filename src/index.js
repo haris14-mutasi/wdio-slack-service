@@ -72,7 +72,7 @@ class SlackService {
         }
       }
 
-    async afterSession(){
+    async onComplete(){
         if(this.options.uploadFile === true){
             const zip = new AdmZip();
             const outputFile = "./allure-results/test.zip";
